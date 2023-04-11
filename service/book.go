@@ -15,6 +15,20 @@ type BookService interface {
 }
 
 func (s *Service) CreateBook(book entity.Book) (entity.Book, error) {
+	// required validation
+	if book.NameBook == "" {
+		return entity.Book{}, errors.New("name_book_required")
+	} else if book.Author == "" {
+		return entity.Book{}, errors.New("author_required")
+	}
+
+	// len validation
+	if len(book.NameBook) < 3 {
+		return entity.Book{}, errors.New("name_book_less_than_3_letters")
+	} else if len(book.Author) < 3 {
+		return entity.Book{}, errors.New("author_less_than_3_letters")
+	}
+
 	newBook := entity.Book{
 		NameBook: book.NameBook,
 		Author:   book.Author,
@@ -54,6 +68,20 @@ func (s *Service) GetBook(id int) (entity.Book, error) {
 }
 
 func (s *Service) UpdateBook(id int, book entity.Book) (entity.Book, error) {
+	// required validation
+	if book.NameBook == "" {
+		return entity.Book{}, errors.New("name_book_required")
+	} else if book.Author == "" {
+		return entity.Book{}, errors.New("author_required")
+	}
+
+	// len validation
+	if len(book.NameBook) < 3 {
+		return entity.Book{}, errors.New("name_book_less_than_3_letters")
+	} else if len(book.Author) < 3 {
+		return entity.Book{}, errors.New("author_less_than_3_letters")
+	}
+
 	// Check kalau ada id
 	_, err := s.repo.GetOne(id)
 	if err != nil {
@@ -97,6 +125,7 @@ func (s *Service) DeleteBook(id int) error {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return errors.New("not_found")
 		}
+		return err
 	}
 	return nil
 }
